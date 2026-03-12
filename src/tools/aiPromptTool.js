@@ -92,9 +92,38 @@ class AIPromptTool extends ToolBase {
       const baseType = componentType.substring(3);
       switch (baseType) {
         case 'button':
-          const buttonProps = { ...props, type: props.type || 'primary' };
-          componentCode = `<LSButton ${generateProps(buttonProps)}>主要按钮</LSButton>`;
-          explanation = `生成了@lingshugroup/web-plus按钮组件，属性：${Object.keys(buttonProps).join(', ')}`;
+          // 按钮组件支持的属性
+          const buttonProps = { 
+            ...props, 
+            type: props.type || 'primary',
+            size: props.size || 'default',
+            icon: props.icon || '',
+            'icon-config': props['icon-config'] || '{}',
+            loading: props.loading || false,
+            disabled: props.disabled || false,
+            round: props.round || false,
+            circle: props.circle || false,
+            link: props.link || false,
+            plain: props.plain || false,
+            'auto-insert-space': props['auto-insert-space'] !== undefined ? props['auto-insert-space'] : true
+          };
+          
+          // 生成按钮组件代码
+          componentCode = `<LSButton ${generateProps(buttonProps)} @click="handleButtonClick" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+  ${props.icon ? `<template #icon>
+    <LSIcon :type="1" name="${props.icon}" color="${props.iconColor || '#fff'}" width="18" height="18" />
+  </template>` : ''}
+  ${buttonProps.circle ? '' : (props.text || '主要按钮')}
+</LSButton>
+
+<!-- 按钮组示例 -->
+<LSButtonGroup separator="|" :separator-size="14">
+  <LSButton type="primary">按钮1</LSButton>
+  <LSButton type="success">按钮2</LSButton>
+  <LSButton type="warning">按钮3</LSButton>
+</LSButtonGroup>`;
+          
+          explanation = `生成了@lingshugroup/web-plus按钮组件，支持类型、尺寸、图标、状态等多种配置，以及按钮组功能`;
           break;
         case 'input':
           const inputProps = Object.assign({}, props, { placeholder: props.placeholder || '请输入内容' });
@@ -102,50 +131,236 @@ class AIPromptTool extends ToolBase {
           explanation = `生成了Element Plus输入组件（与@lingshugroup/web-plus配合使用），属性：${Object.keys(inputProps).join(', ')}`;
           break;
         case 'table':
-          const tableProps = {
-            ...props,
-            'table-column': props['table-column'] || 'tableColumn',
-            'table-data': props['table-data'] || 'tableData'
+          // 表格组件支持的属性
+          const tableProps = { 
+            ...props, 
+            'table-column': props['table-column'] || 'tableColumn', 
+            'table-data': props['table-data'] || 'tableData',
+            loading: props.loading || false,
+            'show-pagination': props['show-pagination'] !== undefined ? props['show-pagination'] : true,
+            'pagination-class': props['pagination-class'] || '',
+            total: props.total || 0,
+            'current-page': props['current-page'] || 1,
+            'page-size': props['page-size'] || 10,
+            'page-sizes': props['page-sizes'] || '[10, 20, 30, 40, 50, 100]',
+            'pagination-options': props['pagination-options'] || '{}',
+            'show-table-index': props['show-table-index'] !== undefined ? props['show-table-index'] : true,
+            'table-index-fixed': props['table-index-fixed'] || false,
+            'table-index-label': props['table-index-label'] || '序号',
+            'index-column-options': props['index-column-options'] || '{}',
+            'show-radio': props['show-radio'] || false,
+            'radio-column-options': props['radio-column-options'] || '{}',
+            'show-radio-label': props['show-radio-label'] || false,
+            'radio-prop': props['radio-prop'] || 'id',
+            'current-row': props['current-row'] || '',
+            'show-select': props['show-select'] || false,
+            'select-column-options': props['select-column-options'] || '{}',
+            'selection': props['selection'] || '[]',
+            'show-expand': props['show-expand'] || false,
+            'expand-column-options': props['expand-column-options'] || '{}',
+            'show-empty': props['show-empty'] !== undefined ? props['show-empty'] : true,
+            'label-empty': props['label-empty'] || '--',
+            'label-empty-class': props['label-empty-class'] || '',
+            'empty-label': props['empty-label'] || '暂无数据',
+            'table-index-in-page': props['table-index-in-page'] || false,
+            'table-index-start': props['table-index-start'] || false
           };
-          componentCode = `<LSTable ${generateProps(tableProps)}></LSTable>`;
-          explanation = `生成了@lingshugroup/web-plus表格组件，属性：${Object.keys(tableProps).join(', ')}`;
+          
+          // 生成表格组件代码，包含常用插槽
+          componentCode = `<LSTable ${generateProps(tableProps)} @size-change="handleSizeChange" @current-page-change="handleCurrentPageChange">
+  <template #empty>
+    <div class="ls-table-empty">
+      <LSIcon name="DocumentRemove" size="48" color="#ccc" />
+      <div style="margin-top: 16px;">{{ tableProps['empty-label'] }}</div>
+    </div>
+  </template>
+  <template #append>
+    <div class="ls-table-append">
+      <!-- 表格底部自定义内容 -->
+    </div>
+  </template>
+  <template #default>
+    <!-- 后置自定义内容 -->
+  </template>
+  <template #prepend>
+    <!-- 前置自定义内容 -->
+  </template>
+  <!-- 列插槽示例 -->
+  <template #status="{ row }">
+    <el-tag :type="row.status">{{ row.status }}</el-tag>
+  </template>
+  <template #status-header="{ column }">
+    <div>
+      <LSIcon name="CollectionTag" color="#409EFF" size="20" />
+      {{ column.label }}
+    </div>
+  </template>
+</LSTable>`;
+          
+          explanation = `生成了@lingshugroup/web-plus表格组件，支持分页、选择、索引、空状态等多种功能，包含完整的属性和插槽`;
           break;
         case 'form':
-          const formProps = { ...props, model: props.model || 'form' };
-          componentCode = `<LSForm ${generateProps(formProps)}>\n  <LSFormItem label="用户名">\n    <el-input v-model="form.username"></el-input>\n  </LSFormItem>\n  <LSFormItem label="密码">\n    <el-input v-model="form.password" type="password"></el-input>\n  </LSFormItem>\n  <LSFormItem>\n    <LSButton type="primary" @click="submitForm">提交</LSButton>\n  </LSFormItem>\n</LSForm>`;
-          explanation = `生成了@lingshugroup/web-plus表单组件，属性：${Object.keys(formProps).join(', ')}`;
+          // 表单组件支持的属性
+          const formProps = { 
+            ...props, 
+            'form-data': props['form-data'] || 'formData',
+            'form-items': props['form-items'] || 'formItems',
+            column: props.column || 1,
+            loading: props.loading || false,
+            'show-btn-loading': props['show-btn-loading'] !== undefined ? props['show-btn-loading'] : true,
+            read: props.read || false,
+            disabled: props.disabled || false,
+            'show-buttons': props['show-buttons'] !== undefined ? props['show-buttons'] : true,
+            'buttons-class': props['buttons-class'] || '',
+            'buttons-left': props['buttons-left'] || false,
+            'show-reset': props['show-reset'] !== undefined ? props['show-reset'] : true,
+            'show-submit': props['show-submit'] !== undefined ? props['show-submit'] : true,
+            'confirm-text': props['confirm-text'] || '确认',
+            'reset-text': props['reset-text'] || '重置',
+            'confirm-class-name': props['confirm-class-name'] || '',
+            colon: props.colon !== undefined ? props.colon : true,
+            'label-empty': props['label-empty'] || '--',
+            'has-def-read-style': props['has-def-read-style'] || false
+          };
+          
+          // 生成表单组件代码，包含常用插槽
+          componentCode = `<LSForm ${generateProps(formProps)} @submit="handleFormSubmit" @reset="handleFormReset" @on-change="handleFormChange" @change-form-data="handleFormDataChange">
+  <template #buttons-prepend>
+    <div class="form-buttons-prepend">
+      <!-- 按钮前置自定义内容 -->
+    </div>
+  </template>
+  <template #buttons-append>
+    <div class="form-buttons-append">
+      <!-- 按钮后置自定义内容 -->
+    </div>
+  </template>
+  <template #default>
+    <!-- 后置自定义内容 -->
+  </template>
+  <!-- 表单项插槽示例 -->
+  <template #name>
+    <LSFormItem label="自定义名称">
+      <el-input v-model="formData.name"></el-input>
+    </LSFormItem>
+  </template>
+  <template #name-prepend>
+    <!-- 名称前置内容 -->
+  </template>
+  <template #name-append>
+    <!-- 名称后置内容 -->
+  </template>
+  <template #name-slot>
+    <!-- 自定义表单项内容 -->
+  </template>
+  <template #name-read-slot>
+    <!-- 只读模式下的自定义内容 -->
+  </template>
+</LSForm>
+
+<!-- 表单项组件示例 -->
+<LSFormItem type="input" label="用户名" prop="username" v-model="formData.username" :rules="{ required: true, message: '请输入用户名', trigger: 'blur' }"></LSFormItem>
+<LSFormItem type="select" label="类型" prop="type" v-model="formData.type" :options="[{ label: '选项1', value: 1 }, { label: '选项2', value: 2 }]"></LSFormItem>
+<LSFormItem type="date" label="日期" prop="date" v-model="formData.date"></LSFormItem>`;
+          
+          explanation = `生成了@lingshugroup/web-plus表单组件，支持多种输入类型、验证规则、插槽等功能，包含完整的属性和插槽`;
           break;
         case 'upload':
-          const uploadProps = {
-            ...props,
-            action: props.action || '/api/upload',
-            isCover: props.isCover !== undefined ? props.isCover : true,
-            limitFile: props.limitFile || [],
-            limitFileMsg: props.limitFileMsg || '',
-            limitSize: props.limitSize || 2,
-            limitUnit: props.limitUnit || 'MB',
-            limitSizeMsg: props.limitSizeMsg || '',
-            limitNumMsg: props.limitNumMsg || '',
-            limitAllFail: props.limitAllFail !== undefined ? props.limitAllFail : false,
-            httpRequestFunc: props.httpRequestFunc || '',
-            formRuleFunc: props.formRuleFunc || '',
-            formValidateFunc: props.formValidateFunc || '',
-            isToast: props.isToast !== undefined ? props.isToast : true,
-            emptyFileMsg: props.emptyFileMsg || '',
-            profile: props.profile !== undefined ? props.profile : false,
-            defProfile: props.defProfile || '',
-            hideCoverBtn: props.hideCoverBtn !== undefined ? props.hideCoverBtn : false,
-            tipContent: props.tipContent || '',
-            hideBtnReachLimit: props.hideBtnReachLimit !== undefined ? props.hideBtnReachLimit : false
-          };
-          componentCode = `<LSUpload ${generateProps(uploadProps)}></LSUpload>`;
-          explanation = `生成了@lingshugroup/web-plus上传组件，属性：${Object.keys(uploadProps).join(', ')}`;
+          // 处理 item 属性，支持 UploadItemType 格式
+          let uploadProps = { ...props };
+          if (props.item) {
+            // 如果提供了 item 属性，使用它
+            uploadProps.item = props.item;
+          } else {
+            // 否则创建默认的 item 对象
+            uploadProps.item = {
+              isCover: props.isCover !== undefined ? props.isCover : true,
+              limitFile: props.limitFile || [],
+              limitFileMsg: props.limitFileMsg || '',
+              limitSize: props.limitSize || 2,
+              limitUnit: props.limitUnit || 'MB',
+              limitSizeMsg: props.limitSizeMsg || '',
+              limitNumMsg: props.limitNumMsg || '',
+              limitAllFail: props.limitAllFail !== undefined ? props.limitAllFail : false,
+              httpRequestFunc: props.httpRequestFunc || '',
+              formRuleFunc: props.formRuleFunc || '',
+              formValidateFunc: props.formValidateFunc || '',
+              isToast: props.isToast !== undefined ? props.isToast : true,
+              emptyFileMsg: props.emptyFileMsg || '',
+              profile: props.profile !== undefined ? props.profile : false,
+              defProfile: props.defProfile || '',
+              hideCoverBtn: props.hideCoverBtn !== undefined ? props.hideCoverBtn : false,
+              tipContent: props.tipContent || '',
+              hideBtnReachLimit: props.hideBtnReachLimit !== undefined ? props.hideBtnReachLimit : false,
+              bgImage: props.bgImage || '',
+              beforeUpload: props.beforeUpload || '',
+              onRemove: props.onRemove || ''
+            };
+          }
+          
+          // 生成组件代码，包含常用事件和插槽
+          componentCode = `<LSUpload ${generateProps(uploadProps)} @upload-error-func="handleUploadError" @http-response-func="handleHttpResponse" @on-change-func="handleFileChange" @on-handle-cropper="handleImageCropper" @success="handleUploadSuccess" @error="handleUploadError" @remove="handleFileRemove">
+  <template #trigger>
+    <LSButton type="primary">上传文件</LSButton>
+  </template>
+  <template #tip>
+    <div class="ls-tip">
+      ${uploadProps.item.tipContent || '请上传文件'}
+    </div>
+  </template>
+  <template #file="{ file }">
+    <div class="custom-file-item">
+      <span>{{ file.name }}</span>
+      <LSButton size="small" type="danger" @click.stop="handleCustomRemove(file)">
+        删除
+      </LSButton>
+    </div>
+  </template>
+</LSUpload>`;
+          
+          explanation = `生成了@lingshugroup/web-plus上传组件，支持文件格式、大小限制，以及自定义上传按钮、提示信息和文件列表项`;
           break;
         case 'preview':
-          const previewProps = { ...props, 'file-list': props['file-list'] || 'fileList' };
-          componentCode = `<!-- v1.0.34+之后不建议使用 -->\n<LSPreview ${generateProps(previewProps)}></LSPreview>\n\n<!-- v1.0.34+ 推荐使用 -->\n<LSPreviewImage ${generateProps(previewProps)}></LSPreviewImage>\n<LSPreviewDocx ${generateProps(previewProps)}></LSPreviewDocx>\n<LSPreviewPdf ${generateProps(previewProps)}></LSPreviewPdf>\n<LSPreviewXlsx ${generateProps(previewProps)}></LSPreviewXlsx>`;
-          explanation = `生成了@lingshugroup/web-plus预览组件，属性：${Object.keys(previewProps).join(', ')}`;
+          // 预览组件支持的属性
+          const previewProps = { 
+            ...props, 
+            'file-list': props['file-list'] || 'fileList',
+            'model-value': props['model-value'] || 'showViewer',
+            source: props.source || '[]',
+            'need-loading': props['need-loading'] !== undefined ? props['need-loading'] : true,
+            'loading-option': props['loading-option'] || '{ text: "Loading", background: "rgba(0, 0, 0, 0.3)" }',
+            'has-pagination': props['has-pagination'] || false,
+            'c-map-url-path': props['c-map-url-path'] || '',
+            'hide-on-click-modal': props['hide-on-click-modal'] || false,
+            'init-no-pagination': props['init-no-pagination'] || false,
+            'has-download': props['has-download'] || false,
+            'download-data': props['download-data'] || '{}',
+            'download-loading': props['download-loading'] || false
+          };
+          
+          // 生成预览组件代码，包含所有类型的预览组件
+          componentCode = `<!-- 图片预览 -->
+<LSPreviewImage v-model="${previewProps['model-value']}" :source="${previewProps.source}" :on-close="handlePreviewClose" :has-download="${previewProps['has-download']}" :hide-on-click-modal="${previewProps['hide-on-click-modal']}">
+  <template #viewer>
+    <!-- 自定义图片查看器内容 -->
+  </template>
+  <template #extra>
+    <!-- 扩展内容 -->
+  </template>
+</LSPreviewImage>
+
+<!-- 文档预览 -->
+<LSPreviewDocx v-model="${previewProps['model-value']}" :source="${previewProps.source}" :on-close="handlePreviewClose" :hide-on-click-modal="${previewProps['hide-on-click-modal']}" :has-download="${previewProps['has-download']}" :on-download="handleDownload" />
+
+<!-- PDF预览 -->
+<LSPreviewPdf v-model="${previewProps['model-value']}" :source="${previewProps.source}" :on-close="handlePreviewClose" :c-map-url-path="${previewProps['c-map-url-path'] || '"/cmaps/"'}" :hide-on-click-modal="${previewProps['hide-on-click-modal']}" :init-no-pagination="${previewProps['init-no-pagination']}" :has-download="${previewProps['has-download']}" :on-download="handleDownload" />
+
+<!-- Excel预览 -->
+<LSPreviewXlsx v-model="${previewProps['model-value']}" :source="${previewProps.source}" :on-close="handlePreviewClose" :has-pagination="${previewProps['has-pagination']}" :has-download="${previewProps['has-download']}" :on-download="handleDownload" />`;
+          
+          explanation = `生成了@lingshugroup/web-plus预览组件，支持图片、文档、PDF、Excel等多种文件类型的预览，包含完整的属性和插槽`;
           break;
+
         case 'icon':
           const iconProps = { ...props, 'icon-config': props['icon-config'] || '{}' };
           componentCode = `<LSIcon ${generateProps(iconProps)}></LSIcon>`;
@@ -188,7 +403,7 @@ class AIPromptTool extends ToolBase {
         case 'list':
           const listProps = { ...props, data: props.data || 'listData' };
           componentCode = `<LSList ${generateProps(listProps)}>\n  <template #item="{ item, index }">\n    <div>{{ index + 1 }}. {{ item.title }}</div>\n  </template>\n  <template #empty>\n    <div>暂无数据</div>\n  </template>\n</LSList>`;
-          explanation = `生成了@lingshugro u p/web-plus列表组件，属性：${Object.keys(listProps).join(', ')}，插槽：item, empty`;
+          explanation = `生成了@lingshugroup/web-plus列表组件，属性：${Object.keys(listProps).join(', ')}，插槽：item, empty`;
           break;
         case 'chart':
           const chartProps = { ...props, data: props.data || 'chartData' };
@@ -202,7 +417,7 @@ class AIPromptTool extends ToolBase {
           break;
         case 'breadcrumb':
           const breadcrumbProps = { ...props, list: props.list || 'breadcrumbList' };
-          componentCode = `<LSBre adcr u mb ${generateProps(breadcrumbProps)} @item-click="handleBreadcrumbClick"></LSBreadcrumb>`;
+          componentCode = `<LSBreadcrumb ${generateProps(breadcrumbProps)} @item-click="handleBreadcrumbClick"></LSBreadcrumb>`;
           explanation = `生成了@lingshugroup/web-plus面包屑组件，属性：${Object.keys(breadcrumbProps).join(', ')}，事件：item-click`;
           break;
         case 'menu':
@@ -215,7 +430,7 @@ class AIPromptTool extends ToolBase {
           explanation = `生成了@lingshugroup/web-plus确认对话框组件，方法：then, catch`;
           break;
         case 'bellMessage':
-          componentCode = `//  使用方法\ n LSBellMessage({\n  message: '${props.message || '通知内容'}',\n  type: '${props.type || 'success'}',\n  duration: ${props.duration || 3000},\n  showClose: ${props.showClose || true}\n});`;
+          componentCode = `//  使用方法\n LSBellMessage({\n  message: '${props.message || '通知内容'}',\n  type: '${props.type || 'success'}',\n  duration: ${props.duration || 3000},\n  showClose: ${props.showClose || true}\n});`;
           explanation = `生成了@lingshugroup/web-plus通知组件，属性：message, type, duration, showClose`;
           break;
         case 'dialog':
@@ -230,7 +445,7 @@ class AIPromptTool extends ToolBase {
           break;
         case 'containerBox':
           const containerBoxProps = { ...props, title: props.title || '容器标题' };
-          componentCode = `<LSContainerBox ${generateProps(containerBoxProps)}>\n   < temp late  # heade r >\n    <div> 自 定义头部</div>\ n   </template > \n   <temp l ate # d efault >\n    < d iv>容器 内 容</div>\n   < /template>\n  < t empl ate # f ooter > \n     <div>自定 义 底部</d i v>\n  </template>\n</LSContainerBox>`;
+          componentCode = `<LSContainerBox ${generateProps(containerBoxProps)}>\n  <template #header>\n    <div>自定义头部</div>\n  </template>\n  <template #default>\n    <div>容器内容</div>\n  </template>\n  <template #footer>\n    <div>自定义底部</div>\n  </template>\n</LSContainerBox>`;
           explanation = `生成了@lingshugroup/web-plus容器组件，属性：${Object.keys(containerBoxProps).join(', ')}，插槽：header, default, footer`;
           break;
         case 'tooltip':
@@ -357,7 +572,7 @@ class AIPromptTool extends ToolBase {
       const importInstructions = `// 导入 @lingshugroup/web-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview, LSPreviewImage, LSPreviewDocx, LSPreviewPdf, LSPreviewXlsx, LSIcon, LSLayout, LSDescriptions, LSTree, LSMap, LSLive, LSJsonEditor, LSEditor, LSList, LSChart, LSBackTop, LSBreadcrumb, LSMenu, LSConfirm, LSBellMessage, LSDialog, LSPrint, LSContainerBox, LSTooltip } from '@lingshugroup/web-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport '@lingshugroup/web-plus/index.css';`;
 
       // 添加方法说明
-      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('@node-click') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log(marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleJsonChange = (value) => { console.log(value); };\nconst handleEditorChange = (value) => { console.log(value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log(params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log(item); };\nconst handleMenuClick = (item) => { console.log(item); };\n' : ''}${componentCode.includes('@open') ? 'const handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); dialogVisible = false; };\n' : ''}${componentCode.includes('@print') ? 'const handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}${componentCode.includes('submitForm') ? 'const submitForm = () => { console.log(form); };\n' : ''}`;
+    const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('handleButtonClick') ? 'const handleButtonClick = (event) => { console.log("按钮点击:", event); };\nconst handleMouseEnter = (event) => { console.log("鼠标进入:", event); };\nconst handleMouseLeave = (event) => { console.log("鼠标离开:", event); };\n' : ''}${componentCode.includes('handleSizeChange') ? 'const handleSizeChange = (size) => { console.log("每页条数改变:", size); };\nconst handleCurrentPageChange = (page) => { console.log("当前页码改变:", page); };\n' : ''}${componentCode.includes('handleFormSubmit') ? 'const handleFormSubmit = (formData) => { console.log("表单提交:", formData); };\nconst handleFormReset = (formData) => { console.log("表单重置:", formData); };\nconst handleFormChange = (value, prop, index) => { console.log("表单值改变:", value, prop, index); };\nconst handleFormDataChange = (value, prop, form) => { console.log("表单数据更新:", value, prop, form); };\n' : ''}${componentCode.includes('handleUploadError') ? 'const handleUploadError = (msg) => { console.log("上传错误:", msg); };\nconst handleHttpResponse = (data) => { console.log("上传响应:", data); };\nconst handleFileChange = (file) => { console.log("文件更新:", file); };\nconst handleImageCropper = (file, index) => { console.log("图片裁剪:", file, index); };\nconst handleUploadSuccess = (response, file, fileList) => { console.log("上传成功:", response, file, fileList); };\nconst handleFileRemove = (file, fileList) => { console.log("文件移除:", file, fileList); };\nconst handleCustomRemove = (file) => { console.log("自定义删除:", file); };\n' : ''}${componentCode.includes('handlePreviewClose') ? 'const handlePreviewClose = () => { console.log("预览关闭"); showViewer = false; };\nconst handleDownload = (data) => { console.log("下载回调:", data); };\n' : ''}${componentCode.includes('@node-click') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log(marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleJsonChange = (value) => { console.log(value); };\nconst handleEditorChange = (value) => { console.log(value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log(params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log(item); };\nconst handleMenuClick = (item) => { console.log(item); };\n' : ''}${componentCode.includes('@open') ? 'const handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); dialogVisible = false; };\n' : ''}${componentCode.includes('@print') ? 'const handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}\n\n// 示例数据\n${componentCode.includes('formData') ? 'const formData = ref({});\nconst formItems = ref([]);\n' : ''}${componentCode.includes('tableData') ? 'const tableData = ref([]);\nconst tableColumn = ref([]);\n' : ''}${componentCode.includes('fileList') ? 'const fileList = ref([]);\n' : ''}${componentCode.includes('showViewer') ? 'const showViewer = ref(false);\nconst source = ref([]);\n' : ''}`;
 
       return {
         componentType,
