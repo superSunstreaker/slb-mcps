@@ -65,6 +65,30 @@
                     <el-option label="LS 表单" value="ls-form" />
                     <el-option label="LS 上传" value="ls-upload" />
                     <el-option label="LS 预览" value="ls-preview" />
+                    <el-option label="LS 预览图片" value="ls-previewImage" />
+                    <el-option label="LS 预览文档" value="ls-previewDocx" />
+                    <el-option label="LS 预览PDF" value="ls-previewPdf" />
+                    <el-option label="LS 预览Excel" value="ls-previewXlsx" />
+                    <el-option label="LS 图标" value="ls-icon" />
+                    <el-option label="LS 布局" value="ls-layout" />
+                    <el-option label="LS 描述" value="ls-descriptions" />
+                    <el-option label="LS 树" value="ls-tree" />
+                    <el-option label="LS 地图" value="ls-map" />
+                    <el-option label="LS 直播" value="ls-live" />
+                    <el-option label="LS 编辑器" value="ls-editor" />
+                    <el-option label="LS 列表" value="ls-list" />
+                    <el-option label="LS 图表" value="ls-chart" />
+                    <el-option label="LS 回到顶部" value="ls-backtop" />
+                    <el-option label="LS 面包屑" value="ls-breadcrumb" />
+                    <el-option label="LS 菜单" value="ls-menu" />
+                    <el-option label="LS 确认框" value="ls-confirm" />
+                    <el-option label="LS 通知" value="ls-bellMessage" />
+                    <el-option label="LS 对话框" value="ls-dialog" />
+                    <el-option label="LS 打印" value="ls-print" />
+                    <el-option label="LS 容器" value="ls-containerBox" />
+                    <el-option label="LS 提示" value="ls-tooltip" />
+                    <el-option label="LS 裁剪" value="ls-cropper" />
+                    <el-option label="LS 下载" value="ls-download" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="组件配置">
@@ -84,6 +108,12 @@
                 <el-scrollbar>
                   <pre><code>{{ generatedComponent }}</code></pre>
                 </el-scrollbar>
+              </div>
+              <div v-if="generatedComponent" class="component-preview">
+                <h3>组件预览：</h3>
+                <div class="preview-container">
+                  <div v-html="generatedComponent"></div>
+                </div>
               </div>
             </div>
           </el-card>
@@ -375,11 +405,20 @@ const optimizeApi = async () => {
   align-self: flex-start;
 }
 
-.generated-code, .optimized-code {
+.generated-code, .optimized-code, .component-preview {
   margin-top: 20px;
   padding: 15px;
   background-color: #f9f9f9;
   border-radius: 4px;
+}
+
+.preview-container {
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  min-height: 100px;
 }
 
 pre {

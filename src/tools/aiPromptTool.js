@@ -523,15 +523,132 @@ class AIPromptTool extends ToolBase {
       componentCode = `<LSPreview ${generateProps(lsPreviewProps)}></LSPreview>`;
       explanation = `生成了ls-components-plus预览组件，属性：${Object.keys(lsPreviewProps).join(', ')}`;
       break;
+    case 'previewImage':
+      const lsPreviewImageProps = { ...props, 'file-list': props['file-list'] || 'fileList' };
+      componentCode = `<LSPreviewImage ${generateProps(lsPreviewImageProps)}></LSPreviewImage>`;
+      explanation = `生成了ls-components-plus图片预览组件，属性：${Object.keys(lsPreviewImageProps).join(', ')}`;
+      break;
+    case 'previewDocx':
+      const lsPreviewDocxProps = { ...props, 'file-list': props['file-list'] || 'fileList' };
+      componentCode = `<LSPreviewDocx ${generateProps(lsPreviewDocxProps)}></LSPreviewDocx>`;
+      explanation = `生成了ls-components-plus文档预览组件，属性：${Object.keys(lsPreviewDocxProps).join(', ')}`;
+      break;
+    case 'previewPdf':
+      const lsPreviewPdfProps = { ...props, 'file-list': props['file-list'] || 'fileList' };
+      componentCode = `<LSPreviewPdf ${generateProps(lsPreviewPdfProps)}></LSPreviewPdf>`;
+      explanation = `生成了ls-components-plusPDF预览组件，属性：${Object.keys(lsPreviewPdfProps).join(', ')}`;
+      break;
+    case 'previewXlsx':
+      const lsPreviewXlsxProps = { ...props, 'file-list': props['file-list'] || 'fileList' };
+      componentCode = `<LSPreviewXlsx ${generateProps(lsPreviewXlsxProps)}></LSPreviewXlsx>`;
+      explanation = `生成了ls-components-plusExcel预览组件，属性：${Object.keys(lsPreviewXlsxProps).join(', ')}`;
+      break;
+    case 'icon':
+      const lsIconProps = { ...props, 'icon-config': props['icon-config'] || '{}' };
+      componentCode = `<LSIcon ${generateProps(lsIconProps)}></LSIcon>`;
+      explanation = `生成了ls-components-plus图标组件，属性：${Object.keys(lsIconProps).join(', ')}`;
+      break;
+    case 'layout':
+      componentCode = `<LSLayout ${generateProps(props)}>\n  <template #header>\n    <div>头部内容</div>\n  </template>\n  <template #aside>\n    <div>侧边栏内容</div>\n  </template>\n  <template #main>\n    <div>主内容</div>\n  </template>\n  <template #footer>\n    <div>底部内容</div>\n  </template>\n</LSLayout>`;
+      explanation = `生成了ls-components-plus布局组件，插槽：header, aside, main, footer`;
+      break;
+    case 'descriptions':
+      const lsDescriptionsProps = { ...props, list: props.list || 'descriptionsList' };
+      componentCode = `<LSDescriptions ${generateProps(lsDescriptionsProps)}></LSDescriptions>`;
+      explanation = `生成了ls-components-plus描述组件，属性：${Object.keys(lsDescriptionsProps).join(', ')}`;
+      break;
+    case 'tree':
+      const lsTreeProps = { ...props, data: props.data || 'treeData' };
+      componentCode = `<LSTree ${generateProps(lsTreeProps)} @node-click="handleNodeClick"></LSTree>`;
+      explanation = `生成了ls-components-plus树组件，属性：${Object.keys(lsTreeProps).join(', ')}，事件：node-click`;
+      break;
+    case 'map':
+      const lsMapProps = { ...props, markers: props.markers || 'markers' };
+      componentCode = `<LSMap ${generateProps(lsMapProps)} @marker-click="handleMarkerClick"></LSMap>`;
+      explanation = `生成了ls-components-plus地图组件，属性：${Object.keys(lsMapProps).join(', ')}，事件：marker-click`;
+      break;
+    case 'live':
+      const lsLiveProps = { ...props, url: props.url || 'liveUrl' };
+      componentCode = `<LSLive ${generateProps(lsLiveProps)} @play="handlePlay" @pause="handlePause"></LSLive>`;
+      explanation = `生成了ls-components-plus直播组件，属性：${Object.keys(lsLiveProps).join(', ')}，事件：play, pause`;
+      break;
+    case 'editor':
+      const lsEditorProps = { ...props, modelValue: props.modelValue || 'content' };
+      componentCode = `<LSEditor v-model="${lsEditorProps.modelValue}" ${generateProps(lsEditorProps)} @change="handleEditorChange"></LSEditor>`;
+      explanation = `生成了ls-components-plus编辑器组件，属性：${Object.keys(lsEditorProps).join(', ')}，事件：change`;
+      break;
+    case 'list':
+      const lsListProps = { ...props, data: props.data || 'listData' };
+      componentCode = `<LSList ${generateProps(lsListProps)}>\n  <template #item="{ item, index }">\n    <div>{{ index + 1 }}. {{ item.title }}</div>\n  </template>\n  <template #empty>\n    <div>暂无数据</div>\n  </template>\n</LSList>`;
+      explanation = `生成了ls-components-plus列表组件，属性：${Object.keys(lsListProps).join(', ')}，插槽：item, empty`;
+      break;
+    case 'chart':
+      const lsChartProps = { ...props, data: props.data || 'chartData' };
+      componentCode = `<LSChart ${generateProps(lsChartProps)} @chart-click="handleChartClick"></LSChart>`;
+      explanation = `生成了ls-components-plus图表组件，属性：${Object.keys(lsChartProps).join(', ')}，事件：chart-click`;
+      break;
+    case 'backtop':
+      const lsBacktopProps = { ...props, 'visibility-height': props['visibility-height'] || 300 };
+      componentCode = `<LSBackTop ${generateProps(lsBacktopProps)} @click="handleBackTopClick"></LSBackTop>`;
+      explanation = `生成了ls-components-plus回到顶部组件，属性：${Object.keys(lsBacktopProps).join(', ')}，事件：click`;
+      break;
+    case 'breadcrumb':
+      const lsBreadcrumbProps = { ...props, list: props.list || 'breadcrumbList' };
+      componentCode = `<LSBreadcrumb ${generateProps(lsBreadcrumbProps)} @item-click="handleBreadcrumbClick"></LSBreadcrumb>`;
+      explanation = `生成了ls-components-plus面包屑组件，属性：${Object.keys(lsBreadcrumbProps).join(', ')}，事件：item-click`;
+      break;
+    case 'menu':
+      const lsMenuProps = { ...props, menu: props.menu || 'menuData' };
+      componentCode = `<LSMenu ${generateProps(lsMenuProps)} @menu-click="handleMenuClick"></LSMenu>`;
+      explanation = `生成了ls-components-plus菜单组件，属性：${Object.keys(lsMenuProps).join(', ')}，事件：menu-click`;
+      break;
+    case 'confirm':
+      componentCode = `// 使 用 方法\nLSConfirm({\n  title: '${props.title || '确认'}',\n  message: '${props.message || '确定要执行此操作吗？'}',\n  confirmBtnText: '${props.confirmBtnText || '确定'}',\n  cancelBtnText: '${props.cancelBtnText || '取消'}'\n}).then(() => {\n  // 确认操作\n  ${props.onConfirm || 'console.log("确认操作");'}\n}).catch(() => {\n  // 取消操作\n  ${props.onCancel || 'console.log("取消操作");'}\n});`;
+      explanation = `生成了ls-components-plus确认对话框组件，方法：then, catch`;
+      break;
+    case 'bellMessage':
+      componentCode = `//  使用方法\n LSBellMessage({\n  message: '${props.message || '通知内容'}',\n  type: '${props.type || 'success'}',\n  duration: ${props.duration || 3000},\n  showClose: ${props.showClose || true}\n});`;
+      explanation = `生成了ls-components-plus通知组件，属性：message, type, duration, showClose`;
+      break;
+    case 'dialog':
+      const lsDialogProps = { ...props, modelValue: props.modelValue || 'dialogVisible', title: props.title || '对话框' };
+      componentCode = `<LSDialog v-model="${lsDialogProps.modelValue}" ${generateProps(lsDialogProps)} @open="handleDialogOpen" @close="handleDialogClose">\n  <template #default>\n    <div>对话框内容</div>\n  </template>\n  <template #footer>\n    <LSButton @click="${lsDialogProps.modelValue} = false">取消</LSButton>\n    <LSButton type="primary" @click="handleDialogConfirm">确定</LSButton>\n  </template>\n</LSDialog>`;
+      explanation = `生成了ls-components-plus对话框组件，属性：${Object.keys(lsDialogProps).join(', ')}，事件：open, close，插槽：default, footer`;
+      break;
+    case 'print':
+      const lsPrintProps = { ...props, content: props.content || 'printContent' };
+      componentCode = `<LSPrint ${generateProps(lsPrintProps)} @print="handlePrint" @print-end="handlePrintEnd"></LSPrint>`;
+      explanation = `生成了ls-components-plus打印组件，属性：${Object.keys(lsPrintProps).join(', ')}，事件：print, print-end`;
+      break;
+    case 'containerBox':
+      const lsContainerBoxProps = { ...props, title: props.title || '容器标题' };
+      componentCode = `<LSContainerBox ${generateProps(lsContainerBoxProps)}>\n  <template #header>\n    <div>自定义头部</div>\n  </template>\n  <template #default>\n    <div>容器内容</div>\n  </template>\n  <template #footer>\n    <div>自定义底部</div>\n  </template>\n</LSContainerBox>`;
+      explanation = `生成了ls-components-plus容器组件，属性：${Object.keys(lsContainerBoxProps).join(', ')}，插槽：header, default, footer`;
+      break;
+    case 'tooltip':
+      const lsTooltipProps = { ...props, content: props.content || '提示内容' };
+      componentCode = `<LSTooltip ${generateProps(lsTooltipProps)} @show="handleTooltipShow" @hide="handleTooltipHide">\n  <span>悬停我</span>\n</LSTooltip>`;
+      explanation = `生成了ls-components-plus提示组件，属性：${Object.keys(lsTooltipProps).join(', ')}，事件：show, hide`;
+      break;
+    case 'cropper':
+      const lsCropperProps = { ...props, image: props.image || '' };
+      componentCode = `<LSCropper ${generateProps(lsCropperProps)} @crop="handleCrop"></LSCropper>`;
+      explanation = `生成了ls-components-plus裁剪组件，属性：${Object.keys(lsCropperProps).join(', ')}，事件：crop`;
+      break;
+    case 'download':
+      const lsDownloadProps = { ...props, url: props.url || '', filename: props.filename || 'download' };
+      componentCode = `<LSDownload ${generateProps(lsDownloadProps)} @start="handleDownloadStart" @end="handleDownloadEnd"></LSDownload>`;
+      explanation = `生成了ls-components-plus下载组件，属性：${Object.keys(lsDownloadProps).join(', ')}，事件：start, end`;
+      break;
         default:
           throw new Error(`未知的ls-components-plus组件类型：${baseType}`);
       }
       
       // 添加导入说明
-      const importInstructions = `// 导入 ls-components-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview } from 'ls-components-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport 'ls-components-plus/dist/index.css';`;
+      const importInstructions = `// 导入 ls-components-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview, LSPreviewImage, LSPreviewDocx, LSPreviewPdf, LSPreviewXlsx, LSIcon, LSLayout, LSDescriptions, LSTree, LSMap, LSLive, LSEditor, LSList, LSChart, LSBackTop, LSBreadcrumb, LSMenu, LSConfirm, LSBellMessage, LSDialog, LSPrint, LSContainerBox, LSTooltip, LSCropper, LSDownload } from 'ls-components-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport 'ls-components-plus/dist/index.css';`;
 
       // 添加方法说明
-      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('submitForm') ? 'const submitForm = () => { console.log("表单提交"); };\n' : ''}`;
+      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('submitForm') ? 'const submitForm = () => { console.log("表单提交"); };\n' : ''}${componentCode.includes('handleNodeClick') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log("标记点击:", marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleEditorChange = (value) => { console.log("编辑器变化:", value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log("图表点击:", params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log("面包屑点击:", item); };\nconst handleMenuClick = (item) => { console.log("菜单点击:", item); };\n' : ''}${componentCode.includes('@open') ? 'const handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); };\n' : ''}${componentCode.includes('@print') ? 'const handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}${componentCode.includes('@crop') ? 'const handleCrop = (data) => { console.log("裁剪结果:", data); };\n' : ''}${componentCode.includes('@start') ? 'const handleDownloadStart = () => { console.log("开始下载"); };\nconst handleDownloadEnd = () => { console.log("下载结束"); };\n' : ''}`;
 
       return {
         componentType,
@@ -598,7 +715,7 @@ class AIPromptTool extends ToolBase {
       const importInstructions = `// 导入 @lingshugroup/web-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview, LSPreviewImage, LSPreviewDocx, LSPreviewPdf, LSPreviewXlsx, LSIcon, LSLayout, LSDescriptions, LSTree, LSMap, LSLive, LSJsonEditor, LSEditor, LSList, LSChart, LSBackTop, LSBreadcrumb, LSMenu, LSConfirm, LSBellMessage, LSDialog, LSPrint, LSContainerBox, LSTooltip } from '@lingshugroup/web-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport '@lingshugroup/web-plus/index.css';`;
 
       // 添加方法说明
-    const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('handleButtonClick') ? 'const handleButtonClick = (event) => { console.log("按钮点击:", event); };\nconst handleMouseEnter = (event) => { console.log("鼠标进入:", event); };\nconst handleMouseLeave = (event) => { console.log("鼠标离开:", event); };\n' : ''}${componentCode.includes('handleSizeChange') ? 'const handleSizeChange = (size) => { console.log("每页条数改变:", size); };\nconst handleCurrentPageChange = (page) => { console.log("当前页码改变:", page); };\n' : ''}${componentCode.includes('handleFormSubmit') ? 'const handleFormSubmit = (formData) => { console.log("表单提交:", formData); };\nconst handleFormReset = (formData) => { console.log("表单重置:", formData); };\nconst handleFormChange = (value, prop, index) => { console.log("表单值改变:", value, prop, index); };\nconst handleFormDataChange = (value, prop, form) => { console.log("表单数据更新:", value, prop, form); };\n' : ''}${componentCode.includes('handleUploadError') ? 'const handleUploadError = (msg) => { console.log("上传错误:", msg); };\nconst handleHttpResponse = (data) => { console.log("上传响应:", data); };\nconst handleFileChange = (file) => { console.log("文件更新:", file); };\nconst handleImageCropper = (file, index) => { console.log("图片裁剪:", file, index); };\nconst handleUploadSuccess = (response, file, fileList) => { console.log("上传成功:", response, file, fileList); };\nconst handleFileRemove = (file, fileList) => { console.log("文件移除:", file, fileList); };\nconst handleCustomRemove = (file) => { console.log("自定义删除:", file); };\n' : ''}${componentCode.includes('handlePreviewClose') ? 'const handlePreviewClose = () => { console.log("预览关闭"); showViewer = false; };\nconst handleDownload = (data) => { console.log("下载回调:", data); };\n' : ''}${componentCode.includes('@node-click') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log(marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleJsonChange = (value) => { console.log(value); };\nconst handleEditorChange = (value) => { console.log(value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log(params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log(item); };\nconst handleMenuClick = (item) => { console.log(item); };\n' : ''}${componentCode.includes('@open') ? 'const handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); dialogVisible = false; };\n' : ''}${componentCode.includes('@print') ? 'const handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}\n\n// 示例数据\n${componentCode.includes('formData') ? 'const formData = ref({});\nconst formItems = ref([]);\n' : ''}${componentCode.includes('tableData') ? 'const tableData = ref([]);\nconst tableColumn = ref([]);\n' : ''}${componentCode.includes('fileList') ? 'const fileList = ref([]);\n' : ''}${componentCode.includes('showViewer') ? 'const showViewer = ref(false);\nconst source = ref([]);\n' : ''}`;
+      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('handleButtonClick') ? 'const handleButtonClick = (event) => { console.log("按钮点击:", event); };\nconst handleMouseEnter = (event) => { console.log("鼠标进入:", event); };\nconst handleMouseLeave = (event) => { console.log("鼠标离开:", event); };\n' : ''}${componentCode.includes('handleSizeChange') ? 'const handleSizeChange = (size) => { console.log("每页条数改变:", size); };\nconst handleCurrentPageChange = (page) => { console.log("当前页码改变:", page); };\n' : ''}${componentCode.includes('handleFormSubmit') ? 'const handleFormSubmit = (formData) => { console.log("表单提交:", formData); };\nconst handleFormReset = (formData) => { console.log("表单重置:", formData); };\nconst handleFormChange = (value, prop, index) => { console.log("表单值改变:", value, prop, index); };\nconst handleFormDataChange = (value, prop, form) => { console.log("表单数据更新:", value, prop, form); };\n' : ''}${componentCode.includes('handleUploadError') ? 'const handleUploadError = (msg) => { console.log("上传错误:", msg); };\nconst handleHttpResponse = (data) => { console.log("上传响应:", data); };\nconst handleFileChange = (file) => { console.log("文件更新:", file); };\nconst handleImageCropper = (file, index) => { console.log("图片裁剪:", file, index); };\nconst handleUploadSuccess = (response, file, fileList) => { console.log("上传成功:", response, file, fileList); };\nconst handleFileRemove = (file, fileList) => { console.log("文件移除:", file, fileList); };\nconst handleCustomRemove = (file) => { console.log("自定义删除:", file); };\n' : ''}${componentCode.includes('handlePreviewClose') ? 'const handlePreviewClose = () => { console.log("预览关闭"); showViewer = false; };\nconst handleDownload = (data) => { console.log("下载回调:", data); };\n' : ''}${componentCode.includes('@node-click') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log(marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleJsonChange = (value) => { console.log(value); };\nconst handleEditorChange = (value) => { console.log(value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log(params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log(item); };\nconst handleMenuClick = (item) => { console.log(item); };\n' : ''}${componentCode.includes('@open') ? 'const handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); dialogVisible = false; };\n' : ''}${componentCode.includes('@print') ? 'const handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}\n\n// 示例数据\n${componentCode.includes('formData') ? 'const formData = ref({});\nconst formItems = ref([]);\n' : ''}${componentCode.includes('tableData') ? 'const tableData = ref([]);\nconst tableColumn = ref([]);\n' : ''}${componentCode.includes('fileList') ? 'const fileList = ref([]);\n' : ''}${componentCode.includes('showViewer') ? 'const showViewer = ref(false);\nconst source = ref([]);\n' : ''}`;
 
       return {
         componentType,
