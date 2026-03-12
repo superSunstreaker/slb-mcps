@@ -1,0 +1,31 @@
+{
+  "name": "slb-mcps",
+  "version": "1.0.0",
+  "description": "模型上下文协议（MCP）框架，用于连接外部工具和服务至TRAE",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [
+    "MCP",
+    "Model Context Protocol",
+    "TRAE",
+    "tool integration"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@lingshugroup/web-plus": "^2.4.11",
+    "body-parser": "^1.20.2",
+    "element-plus": "^2.13.5",
+    "express": "^4.18.2",
+    "vue": "^3.5.30"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}
