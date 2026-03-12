@@ -456,6 +456,19 @@ class AIPromptTool extends ToolBase {
         default:
           throw new Error(`未知的@lingshugroup/web-plus组件类型：${baseType}`);
       }
+      
+      // 添加导入说明
+      const importInstructions = `// 导入 @lingshugroup/web-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview, LSPreviewImage, LSPreviewDocx, LSPreviewPdf, LSPreviewXlsx, LSIcon, LSLayout, LSDescriptions, LSTree, LSMap, LSLive, LSJsonEditor, LSEditor, LSList, LSChart, LSBackTop, LSBreadcrumb, LSMenu, LSConfirm, LSBellMessage, LSDialog, LSPrint, LSContainerBox, LSTooltip } from '@lingshugroup/web-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport '@lingshugroup/web-plus/index.css';`;
+
+      // 添加方法说明
+      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('handleButtonClick') ? 'const handleButtonClick = (event) => { console.log("按钮点击:", event); };\nconst handleMouseEnter = (event) => { console.log("鼠标进入:", event); };\nconst handleMouseLeave = (event) => { console.log("鼠标离开:", event); };\n' : ''}${componentCode.includes('handleSizeChange') ? 'const handleSizeChange = (size) => { console.log("每页条数改变:", size); };\nconst handleCurrentPageChange = (page) => { console.log("当前页码改变:", page); };\n' : ''}${componentCode.includes('handleFormSubmit') ? 'const handleFormSubmit = (formData) => { console.log("表单提交:", formData); };\nconst handleFormReset = (formData) => { console.log("表单重置:", formData); };\nconst handleFormChange = (value, prop, index) => { console.log("表单值改变:", value, prop, index); };\nconst handleFormDataChange = (value, prop, form) => { console.log("表单数据更新:", value, prop, form); };\n' : ''}${componentCode.includes('handleUploadError') ? 'const handleUploadError = (msg) => { console.log("上传错误:", msg); };\nconst handleHttpResponse = (data) => { console.log("上传响应:", data); };\nconst handleFileChange = (file) => { console.log("文件更新:", file); };\nconst handleImageCropper = (file, index) => { console.log("图片裁剪:", file, index); };\nconst handleUploadSuccess = (response, file, fileList) => { console.log("上传成功:", response, file, fileList); };\nconst handleFileRemove = (file, fileList) => { console.log("文件移除:", file, fileList); };\nconst handleCustomRemove = (file) => { console.log("自定义删除:", file); };\n' : ''}${componentCode.includes('handlePreviewClose') ? 'const handlePreviewClose = () => { console.log("预览关闭"); showViewer = false; };\nconst handleDownload = (data) => { console.log("下载回调:", data); };\n' : ''}${componentCode.includes('@node-click') ? 'const handleNodeClick = (node) => { console.log(node); };\n' : ''}${componentCode.includes('@marker-click') ? 'const handleMarkerClick = (marker) => { console.log("标记点击:", marker); };\n' : ''}${componentCode.includes('@play') ? 'const handlePlay = () => { console.log("播放"); };\nconst handlePause = () => { console.log("暂停"); };\n' : ''}${componentCode.includes('@change') ? 'const handleJsonChange = (value) => { console.log("JSON变化:", value); };\nconst handleEditorChange = (value) => { console.log("编辑器变化:", value); };\n' : ''}${componentCode.includes('@chart-click') ? 'const handleChartClick = (params) => { console.log("图表点击:", params); };\n' : ''}${componentCode.includes('@click') ? 'const handleBackTopClick = () => { console.log("回到顶部"); };\nconst handleBreadcrumbClick = (item) => { console.log("面包屑点击:", item); };\nconst handleMenuClick = (item) => { console.log("菜单点击:", item); };\nconst handleDialogOpen = () => { console.log("对话框打开"); };\nconst handleDialogClose = () => { console.log("对话框关闭"); };\nconst handleDialogConfirm = () => { console.log("对话框确认"); };\nconst handlePrint = () => { console.log("开始打印"); };\nconst handlePrintEnd = () => { console.log("打印结束"); };\n' : ''}${componentCode.includes('@show') ? 'const handleTooltipShow = () => { console.log("提示显示"); };\nconst handleTooltipHide = () => { console.log("提示隐藏"); };\n' : ''}${componentCode.includes('submitForm') ? 'const submitForm = () => { console.log("表单提交"); };\n' : ''}`;
+
+      return {
+        componentType,
+        config,
+        code: `${importInstructions}\n\n${componentCode}\n\n${methodInstructions}`,
+        explanation
+      };
     } else if (componentType.startsWith('ls-')) {
       // ls-components-plus 组件
       const baseType = componentType.substring(3);
@@ -513,6 +526,19 @@ class AIPromptTool extends ToolBase {
         default:
           throw new Error(`未知的ls-components-plus组件类型：${baseType}`);
       }
+      
+      // 添加导入说明
+      const importInstructions = `// 导入 ls-components-plus 组件\nimport { LSButton, LSForm, LSFormItem, LSUpload, LSTable, LSPreview } from 'ls-components-plus';\n\n// 导入样式\nimport 'element-plus/dist/index.css';\nimport 'ls-components-plus/dist/index.css';`;
+
+      // 添加方法说明
+      const methodInstructions = `// 组件相关方法\n// ${explanation.includes('事件') ? '事件处理方法：' : '方法说明：'}\n${componentCode.includes('submitForm') ? 'const submitForm = () => { console.log("表单提交"); };\n' : ''}`;
+
+      return {
+        componentType,
+        config,
+        code: `${importInstructions}\n\n${componentCode}\n\n${methodInstructions}`,
+        explanation
+      };
     } else {
       // 默认使用 Web Plus 组件（优先）
       switch (componentType) {

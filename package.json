@@ -18,11 +18,19 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@iconify/vue": "^5.0.0",
     "@lingshugroup/web-plus": "^2.4.11",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "5.1.12",
     "body-parser": "^1.20.2",
+    "echarts": "^6.0.0",
     "element-plus": "^2.13.5",
     "express": "^4.18.2",
-    "vue": "^3.5.30"
+    "luckyexcel": "^1.0.1",
+    "pdfjs-dist": "4.8.69",
+    "vue": "^3.5.30",
+    "vue-cropper": "^0.6.5",
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

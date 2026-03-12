@@ -60,39 +60,11 @@
               <el-form :model="componentForm" label-width="100px">
                 <el-form-item label="组件类型">
                   <el-select v-model="componentForm.type" placeholder="选择组件类型">
-                    <el-option label="Web Plus 按钮" value="wp-button" />
-                    <el-option label="Web Plus 表格" value="wp-table" />
-                    <el-option label="Web Plus 表单" value="wp-form" />
-                    <el-option label="Web Plus 上传" value="wp-upload" />
-                    <el-option label="Web Plus 预览" value="wp-preview" />
-                    <el-option label="Web Plus 图标" value="wp-icon" />
-                    <el-option label="Web Plus 布局" value="wp-layout" />
-                    <el-option label="Web Plus 描述列表" value="wp-descriptions" />
-                    <el-option label="Web Plus 树" value="wp-tree" />
-                    <el-option label="Web Plus 地图" value="wp-map" />
-                    <el-option label="Web Plus 直播" value="wp-live" />
-                    <el-option label="Web Plus JSON编辑器" value="wp-jsonEditor" />
-                    <el-option label="Web Plus 富文本编辑器" value="wp-editor" />
-                    <el-option label="Web Plus 列表" value="wp-list" />
-                    <el-option label="Web Plus 图表" value="wp-chart" />
-                    <el-option label="Web Plus 回到顶部" value="wp-backTop" />
-                    <el-option label="Web Plus 面包屑" value="wp-breadcrumb" />
-                    <el-option label="Web Plus 菜单" value="wp-menu" />
-                    <el-option label="Web Plus 确认框" value="wp-confirm" />
-                    <el-option label="Web Plus 通知" value="wp-bellMessage" />
-                    <el-option label="Web Plus 对话框" value="wp-dialog" />
-                    <el-option label="Web Plus 打印" value="wp-print" />
-                    <el-option label="Web Plus 容器" value="wp-containerBox" />
-                    <el-option label="Web Plus 提示" value="wp-tooltip" />
                     <el-option label="LS 按钮" value="ls-button" />
                     <el-option label="LS 表格" value="ls-table" />
                     <el-option label="LS 表单" value="ls-form" />
                     <el-option label="LS 上传" value="ls-upload" />
                     <el-option label="LS 预览" value="ls-preview" />
-                    <el-option label="Element Plus 按钮" value="button" />
-                    <el-option label="Element Plus 输入框" value="input" />
-                    <el-option label="Element Plus 表格" value="table" />
-                    <el-option label="Element Plus 表单" value="form" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="组件配置">
